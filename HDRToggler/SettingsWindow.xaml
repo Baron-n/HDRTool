@@ -1,0 +1,191 @@
+<Window x:Class="HDRToggler.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="Segoe UI Variable Display, Segoe UI, sans-serif">
+
+    <Border x:Name="Root" CornerRadius="16" Padding="24"
+            MouseDown="Root_MouseDown">
+        <Border.Background>
+            <SolidColorBrush Color="#000000" Opacity="0.88"/>
+        </Border.Background>
+        <Border.Effect>
+            <DropShadowEffect Color="#000000" Opacity="0.6"
+                              BlurRadius="32" ShadowDepth="4" Direction="270"/>
+        </Border.Effect>
+
+        <StackPanel Width="380">
+
+            <!-- Title bar -->
+            <Grid Margin="0,0,0,20">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Ellipse Width="8" Height="8" Fill="#888888" Margin="0,0,8,0"/>
+                    <TextBlock Text="HOTKEY SETTINGS"
+                               Foreground="#999999" FontSize="11" FontWeight="SemiBold"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+                <Button HorizontalAlignment="Right" VerticalAlignment="Center"
+                        Cursor="Hand" Click="CloseButton_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Bg" Background="Transparent"
+                                    CornerRadius="6" Width="24" Height="24">
+                                <TextBlock x:Name="X" Text="&#x2715;"
+                                           Foreground="#888888" FontSize="13"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bg" Property="Background" Value="#1AFFFFFF"/>
+                                    <Setter TargetName="X"  Property="Foreground" Value="#CCFFFFFF"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+
+            <!-- Monitor hotkey rows -->
+            <ItemsControl x:Name="MonitorList">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border CornerRadius="10" Padding="14,12" Margin="0,0,0,6"
+                                Background="#0DFFFFFF">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Monitor name + HDR state -->
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding FriendlyName}"
+                                               Foreground="#E0FFFFFF" FontSize="13" FontWeight="Medium"/>
+                                    <TextBlock FontSize="11" Margin="0,2,0,0">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Text" Value="HDR OFF"/>
+                                                <Setter Property="Foreground" Value="#888888"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding HdrEnabled}" Value="True">
+                                                        <Setter Property="Text" Value="HDR ON"/>
+                                                        <Setter Property="Foreground" Value="#00FF87"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
+
+                                <!-- Hotkey display / recording button -->
+                                <Border Grid.Column="1" CornerRadius="6" Padding="10,5" Margin="10,0"
+                                        Cursor="Hand" MouseLeftButtonDown="RecordButton_Click">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="#1AFFFFFF"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsRecording}" Value="True">
+                                                    <Setter Property="Background" Value="#3300FF87"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock FontSize="11" FontWeight="SemiBold" Foreground="#AAFFFFFF"
+                                               Text="{Binding HotkeyDisplay}" VerticalAlignment="Center"/>
+                                </Border>
+
+                                <!-- Enable/disable toggle -->
+                                <Border Grid.Column="2" CornerRadius="10" Width="36" Height="20"
+                                        Cursor="Hand" MouseLeftButtonDown="ToggleEnabled_Click"
+                                        VerticalAlignment="Center">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="#33FFFFFF"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding HotkeyEnabled}" Value="True">
+                                                    <Setter Property="Background" Value="#4000FF87"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <Ellipse Width="14" Height="14" Fill="#E0FFFFFF"
+                                             HorizontalAlignment="Left" Margin="3,0">
+                                        <Ellipse.Style>
+                                            <Style TargetType="Ellipse">
+                                                <Setter Property="HorizontalAlignment" Value="Left"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding HotkeyEnabled}" Value="True">
+                                                        <Setter Property="HorizontalAlignment" Value="Right"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Ellipse.Style>
+                                    </Ellipse>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- Status text -->
+            <TextBlock x:Name="StatusText" Text="" Foreground="#888888" FontSize="11"
+                       Margin="0,4,0,12" TextWrapping="Wrap" MinHeight="14"/>
+
+            <!-- Buttons -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="1" Content="Clear All" Click="ClearAll_Click"
+                        Margin="0,0,8,0" Padding="14,6"
+                        Foreground="#CC8888" FontSize="11" FontWeight="SemiBold"
+                        Cursor="Hand">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Bg" Background="Transparent"
+                                    CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bg" Property="Background" Value="#1AFF3B3B"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Button Grid.Column="2" Content="Save" Click="Save_Click"
+                        Padding="18,6"
+                        Foreground="#00FF87" FontSize="11" FontWeight="SemiBold"
+                        Cursor="Hand">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Bg" Background="Transparent"
+                                    CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Bg" Property="Background" Value="#1A00FF87"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+
+        </StackPanel>
+    </Border>
+</Window>

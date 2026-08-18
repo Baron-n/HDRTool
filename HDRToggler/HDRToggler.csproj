@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
+    <ApplicationIcon>..\icon\HDRToggler.ico</ApplicationIcon>
+    <Version>1.0.0</Version>
+    <Product>HDR Toggler</Product>
+    <Description>Per-monitor HDR toggle for Windows</Description>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\icon\HDRToggler.ico">
+      <Link>icon\HDRToggler.ico</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
