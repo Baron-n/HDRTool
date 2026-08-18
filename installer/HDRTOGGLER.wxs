@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+
+  <Package Name="HDR Toggler"
+           Manufacturer="Baron-n"
+           Version="1.0.0"
+           UpgradeCode="A1B2C3D4-E5F6-7890-ABCD-EF1234567890"
+           Scope="perMachine">
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of HDR Toggler is already installed." />
+
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+
+    <Feature Id="Main">
+      <ComponentRef Id="ExeComponent" />
+      <ComponentRef Id="ShortcutComponent" />
+    </Feature>
+
+    <StandardDirectory Id="ProgramFilesFolder">
+      <Directory Id="INSTALLFOLDER" Name="HDRToggler">
+        <Component Id="ExeComponent" Guid="11111111-2222-3333-4444-555555555555">
+          <File Id="HDRTogglerExe"
+                Source="..\publish\HDRToggler.exe"
+                KeyPath="yes" />
+        </Component>
+      </Directory>
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ProgramMenuDir" Name="HDRToggler">
+        <Component Id="ShortcutComponent" Guid="22222222-3333-4444-5555-666666666666">
+          <Shortcut Id="AppShortcut"
+                    Name="HDR Toggler"
+                    Description="Per-monitor HDR toggle"
+                    Target="[INSTALLFOLDER]HDRToggler.exe"
+                    WorkingDirectory="INSTALLFOLDER"
+                    Icon="AppIcon" />
+          <Shortcut Id="UninstallShortcut"
+                    Name="Uninstall HDR Toggler"
+                    Target="[SystemFolder]msiexec.exe"
+                    Arguments="/x [ProductCode]" />
+          <RegistryValue Root="HKCU"
+                         Key="Software\Baron-n\HDRToggler"
+                         Name="ShortcutCreated"
+                         Type="integer"
+                         Value="1"
+                         KeyPath="yes" />
+        </Component>
+      </Directory>
+    </StandardDirectory>
+
+    <Icon Id="AppIcon" SourceFile="..\icon\HDRToggler.ico" />
+
+  </Package>
+
+</Wix>
