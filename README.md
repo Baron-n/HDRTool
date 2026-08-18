@@ -1,4 +1,4 @@
-# HDR Toggler
+# HDR Tool
 
 A lightweight Windows system tray utility for toggling HDR **per monitor**. Built on the Win32 `DisplayConfig` API.
 
