@@ -105,6 +105,14 @@ public partial class App : System.Windows.Application
     {
         var settingsWindow = new SettingsWindow();
         settingsWindow.ShowDialog();
+
+        _settings = SettingsService.Load();
+        HotkeyService.UnregisterAll();
+        foreach (var (monitorIndex, binding) in _settings.Hotkeys)
+        {
+            if (binding is { Enabled: true, IsEmpty: false })
+                HotkeyService.Register(monitorIndex, binding);
+        }
     }
 
     private void DoExit()
